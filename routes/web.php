@@ -14,7 +14,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function(){
+Route::group(['prefix' => 'admin'], function(){
     Route::get('/home', [BackController::class, 'home']);
     Route::group(['prefix' => 'staff'], function(){
         Route::get('profile', [BackController::class, 'staff_profile']);

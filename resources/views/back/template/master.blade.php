@@ -50,10 +50,9 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
                         <i class="fas fa-user fa-fw"></i>
-                        Xin chào 
+                        Xin chào @yield('loggedInUser')
                         <i class="fas fa-chevron-down"></i>
                     </a>
-                    <!--: {{Auth::user()->fullname}}-->
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                         <a href="#" class="dropdown-item">
                             <i class="fas fa-users fa-fw"></i> Quản lý nhân viên
