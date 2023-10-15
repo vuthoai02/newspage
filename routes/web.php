@@ -14,17 +14,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::group(['prefix' => 'admin'], function(){
+Route::group(['prefix' => '/admin', 'middleware' => 'auth'], function(){
     Route::get('/home', [BackController::class, 'home']);
-    Route::group(['prefix' => 'staff'], function(){
-        Route::get('profile', [BackController::class, 'staff_profile']);
-        Route::post('profile', [BackController::class, 'staff_profile_post']);
-        Route::get('list', [BackController::class, 'staff']);
-        Route::get('add', [BackController::class, 'staff_add']);
-        Route::post('add', [BackController::class, 'staff_add_post']);
-        Route::get('edit/{id}', [BackController::class, 'staff_edit']);
-        Route::post('edit/{id}', [BackController::class, 'staff_edit_post']);
-        Route::post('delete', [BackController::class, 'staff_delete']);
-        Route::post('filter', [BackController::class, 'staff_filter']);
-    });
+    
 });
+
+//chung admin và user được
+Route::get('/infor', [UserController::class, 'infor'])->name('infor');
+Route::post('/infor', [UserController::class, 'infor_post'])->name('update_infor');
+Route::get('/change-password', [UserController::class, 'get_newpass']);
+Route::post('/change-password', [UserController::class, 'change_pass'])->name('change_pass');

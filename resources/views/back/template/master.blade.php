@@ -50,19 +50,11 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
                         <i class="fas fa-user fa-fw"></i>
-                        Xin chào @yield('loggedInUser')
+                        {{Auth::user()->username}}
                         <i class="fas fa-chevron-down"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-users fa-fw"></i> Quản lý nhân viên
-                        </a>
                         <div class="dropdown-divider"></div>
-                        <a href="{{asset('admin/staff/profile')}}" class="dropdown-item">
-                            <i class="fas fa-users-edit fa-fw"></i> Thông tin tài khoản
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="{{url('logout')}}" class="dropdown-item dropdown-footer">Thoát</a>
                     </div>
                 </li>
             </ul>
@@ -73,9 +65,7 @@
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="{{url('admin/home')}}" class="brand-link">
-                <img src="{{url('/admin/dist/img/AdminLTELogo.png')}}" alt="AdminLTE Logo"
-                    class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">Admin</span>
+                <span class="brand-text font-weight-light" style="color: white; font-weight:bold;">NewsPage</span>
             </a>
 
             <!-- Sidebar -->
@@ -84,8 +74,7 @@
 
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
-                        data-accordion="false">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <li class="nav-item has-treeview menu-open">
                             <a href="#" class="nav-link">
                                 <i class="fas fa-cog fa-fw"></i>
@@ -102,48 +91,34 @@
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-item has-treeview">
+                        <li class="nav-item has-treeview menu-open">
                             <a href="#" class="nav-link">
                                 <i class="far fa-newspaper fa-fw"></i>
                                 <p>
                                     Quản lý tin tức
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="pages/layout/top-nav.html" class="nav-link">
-                                        Danh mục tin tức
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="pages/layout/top-nav-sidebar.html" class="nav-link">
-                                        Danh sách tin tức
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item has-treeview menu-open">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-share-alt fa-fw"></i>
-                                <p>
-                                    Quản lý mạng xã hội
                                 </p>
                             </a>
                         </li>
                         <li class="nav-item has-treeview menu-open">
                             <a href="#" class="nav-link">
-                                <i class="fas fa-mail-bulk fa-fw"></i>
+                                <i class="far fa-newspaper fa-fw"></i>
                                 <p>
-                                    Quản lý nhận tin khuyến mại
+                                    Quản lý người dùng
                                 </p>
                             </a>
                         </li>
                         <li class="nav-item has-treeview menu-open">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-envelope-open-text fa-fw"></i>
+                            <a href="{{ url('/infor') }}" class="nav-link">
+                                <i class="fas fa-user fa-fw"></i>
                                 <p>
-                                    Quản lý liên hệ
+                                    Thông tin tài khoản
+                                </p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{url('logout')}}" class="nav-link">
+                                <p>
+                                    [Đăng xuất]
                                 </p>
                             </a>
                         </li>
@@ -202,40 +177,7 @@
     </div>
     <!-- ./wrapper -->
 
-    <!-- jQuery -->
-    <script src="plugins/jquery/jquery.min.js"></script>
-    <!-- jQuery UI 1.11.4 -->
-    <script src="plugins/jquery-ui/jquery-ui.min.js"></script>
-    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-    <script>
-    $.widget.bridge('uibutton', $.ui.button)
-    </script>
-    <!-- Bootstrap 4 -->
-    <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- ChartJS -->
-    <script src="plugins/chart.js/Chart.min.js"></script>
-    <!-- Sparkline -->
-    <script src="plugins/sparklines/sparkline.js"></script>
-    <!-- JQVMap -->
-    <script src="plugins/jqvmap/jquery.vmap.min.js"></script>
-    <script src="plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
-    <!-- jQuery Knob Chart -->
-    <script src="plugins/jquery-knob/jquery.knob.min.js"></script>
-    <!-- daterangepicker -->
-    <script src="plugins/moment/moment.min.js"></script>
-    <script src="plugins/daterangepicker/daterangepicker.js"></script>
-    <!-- Tempusdominus Bootstrap 4 -->
-    <script src="plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
-    <!-- Summernote -->
-    <script src="plugins/summernote/summernote-bs4.min.js"></script>
-    <!-- overlayScrollbars -->
-    <script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-    <!-- AdminLTE App -->
-    <script src="dist/js/adminlte.js"></script>
-    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-    <script src="dist/js/pages/dashboard.js"></script>
-    <!-- AdminLTE for demo purposes -->
-    <script src="dist/js/demo.js"></script>
+
 </body>
 
 </html>

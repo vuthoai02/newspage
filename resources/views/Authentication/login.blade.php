@@ -92,7 +92,7 @@
             <!-- Login Form -->
             <form action="{{route('admin-login')}}" method="POST">
                 @csrf
-                <input type="text" id="login" class="input" name="username" placeholder="Tên tài khoản">
+                <input type="text" id="login" class="input" name="email" placeholder="Tên tài khoản">
                 <input type="password" id="password" class="input" name="password" placeholder="Mật khẩu">
                 <input type="submit" id="submit" value="Đăng nhập">
                 @if(session('notice'))
