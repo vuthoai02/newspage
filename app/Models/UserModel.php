@@ -10,10 +10,10 @@ class UserModel extends Model implements AuthenticatableContract
 {
     use Authenticatable;
 
-    protected $table = 'users'; // Tên bảng trong cơ sở dữ liệu
+    protected $table = 'users';
 
     protected $fillable = [
-        'username', 'email', 'password',
+        'email', 'password',
     ];
 
     protected $hidden = [

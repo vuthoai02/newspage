@@ -4,10 +4,3 @@
 @if(session('loggedInUser'))
     @section('loggedInUser', session('loggedInUser')->username);
 @endif
-
-
-@section('content')
-<p>
-    <img src="{{url('/dist/img/images')}}" alt="Web Admin">
-</p>
-@stop
