@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng nhập</title>
+    <title>Đăng ký</title>
     <style>
         * {
             margin: 0;
@@ -50,17 +50,20 @@
         #formContent {
             border-radius: 10px 10px 10px 10px;
             padding: 30px;
-            display: flex;
             background-color: rgba(255, 255, 255, 0.3);
-            flex-direction: row;
             box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.6);
             text-align: center;
+        }
+        form{
+            display: flex;
+            flex-direction: column;
         }
 
         .input{
             width: 20vw;
             height: 5vh;
             padding: 5px;
+            margin: 5px 0;
         }
 
         #submit{
@@ -68,8 +71,8 @@
             border: none;
             color: white;
             height: 6.5vh;
-            width: 10vw;
             font-weight: bold;
+            margin-top: 5px;
         }
 
         #formFooter {
@@ -85,25 +88,24 @@
 <body>
     <div class="wrapper">
         <div class="fadeIn first">
-            <h1 style="color: white; margin-bottom:10px;">Đăng nhập</h1>
+            <h1 style="color: white; margin-bottom:10px;">Đăng ký</h1>
         </div>
         <div id="formContent">
 
             <!-- Login Form -->
-            <form action="{{route('login')}}" method="POST">
+            <form action="{{route('register')}}" method="POST">
                 @csrf
+                <input type="hidden" name="role" value="user">
+                <input type="text" id="login" class="input" name="username" placeholder="Tên tài khoản">
                 <input type="text" id="login" class="input" name="email" placeholder="Email">
                 <input type="password" id="password" class="input" name="password" placeholder="Mật khẩu">
-                <input type="submit" id="submit" value="Đăng nhập">
+                <input type="submit" id="submit" value="Đăng ký">
                 @if(session('notice'))
                 <div class="alert">
                     {{ session('notice')}}
                 </div>
                 @endif
             </form>
-        </div>
-        <div id="formFooter">
-            <a class="underlineHover" href="#">Quên mật khẩu?</a>
         </div>
     </div>
 </body>

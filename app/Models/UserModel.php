@@ -13,7 +13,7 @@ class UserModel extends Model implements AuthenticatableContract
     protected $table = 'users';
 
     protected $fillable = [
-        'email', 'password',
+        'email', 'password','username','role'
     ];
 
     protected $hidden = [

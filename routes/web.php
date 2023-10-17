@@ -3,9 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BackController;
+use App\Http\Controllers\ManagerController;
 
-Route::get('/admin-login', [UserController::class, 'getLogin']);
-Route::post('/admin-login', [UserController::class, 'postLogin'])->name('admin-login');
+Route::get('/login', [UserController::class, 'getLogin']);
+Route::post('/login', [UserController::class, 'postLogin'])->name('login');
+Route::get('/register', [UserController::class, 'getRegister']);
+Route::post('/register', [UserController::class, 'postRegister'])->name('register');
 Route::get('/logout', [UserController::class, 'getLogout']);
 
 
@@ -16,7 +19,13 @@ Route::get('/', function () {
 
 Route::group(['prefix' => '/admin', 'middleware' => 'auth'], function(){
     Route::get('/home', [BackController::class, 'home']);
-    
+    Route::group(['prefix' => '/manager'], function(){
+        Route::get('/user', [ManagerController::class, 'user']);
+    });
+});
+
+Route::group(['prefix' => '/user', 'middleware' => 'auth'], function(){
+    Route::get('/home', [BackController::class, 'home']);
 });
 
 //chung admin và user được

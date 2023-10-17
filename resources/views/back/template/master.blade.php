@@ -100,7 +100,7 @@
                             </a>
                         </li>
                         <li class="nav-item has-treeview menu-open">
-                            <a href="#" class="nav-link">
+                            <a href="{{ url('/admin/manager/user') }}" class="nav-link">
                                 <i class="far fa-newspaper fa-fw"></i>
                                 <p>
                                     Quản lý người dùng

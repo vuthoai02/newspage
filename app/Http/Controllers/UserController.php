@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\UserModel;
+use Illuminate\Foundation\Auth\User;
 
 class UserController extends Controller
 {
@@ -18,8 +19,16 @@ class UserController extends Controller
         return view('Authentication.login');
     }
 
+    public function getRegister()
+    {
+        return view('Authentication.register');
+    }
+
     public function postLogin(Request $request)
     {
+        if(!isset($request->email) && !isset($request->password)){
+            return redirect('/login')->with('notice', 'Vui lòng điền đầy đủ thông tin!');
+        }
         $credentials = [
             'email' => $request->email,
             'password' => $request->password,
@@ -27,9 +36,38 @@ class UserController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect("/admin/home");
+            $user = Auth::user();
+            if($user->role == 'admin'){
+                return redirect("/admin/home");
+            } else{
+                return redirect("/user/home");
+            }
         }else{
-            return redirect('/admin-login')->with('notice', 'Tài khoản mật khẩu không chính xác!');
+            return redirect('/login')->with('notice', 'Tài khoản mật khẩu không chính xác!');
+        }
+    }
+    public function postRegister(Request $request)
+    {
+        if(!isset($request->email) && !isset($request->password) && !isset($request->username)){
+            return redirect('/register')->with('notice', 'Vui lòng điền đầy đủ thông tin!');
+        }
+        $unexist = UserModel::where('username', $request->username)->first();
+        $emexist = UserModel::where('email', $request->email)->first();
+        if(isset($unexist)){
+            return redirect('/register')->with('notice', 'Tên người dùng đã được sử dụng!');
+        } elseif(isset($emexist)){
+            return redirect('/register')->with('notice', 'Email đã được đăng ký!');
+        }
+        $user = new UserModel();
+        $user->username = $request->username;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password);
+        $user->role = $request->role;
+        $flag = $user->save();
+        if ($flag) {
+            return redirect("/login")->with('notice', 'Đăng ký thành công!');
+        }else{
+            return redirect('/register')->with('notice', 'Đăng ký thất bại');
         }
     }
 
@@ -45,7 +83,10 @@ class UserController extends Controller
         if(!isset($request->email)){
             return redirect('/infor')->with(['flash_level' => 'danger', 'flash_message' => 'Vui lòng điền đầy đủ thông tin']);
         }
-
+        $existEmail = UserModel::find($request->email);
+        if(isset($existEmail)){
+            return redirect('/infor')->with(['flash_level' => 'danger', 'flash_message' => 'Email đã tồn tại!']);
+        }
         $user = UserModel::find($request->id);
         $user->email = $request->email; 
         $flag = $user->save(); 
@@ -81,6 +122,6 @@ class UserController extends Controller
     public function getLogout()
     {
         Auth::logout();
-        return redirect('/admin-login');
+        return redirect('/login');
     }
 }
