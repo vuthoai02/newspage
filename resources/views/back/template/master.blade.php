@@ -51,7 +51,6 @@
                     <a class="nav-link" data-toggle="dropdown" href="#">
                         <i class="fas fa-user fa-fw"></i>
                         {{Auth::user()->username}}
-                        <i class="fas fa-chevron-down"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                         <div class="dropdown-divider"></div>
@@ -75,14 +74,7 @@
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                        <li class="nav-item has-treeview menu-open">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-cog fa-fw"></i>
-                                <p>
-                                    Cấu hình hệ thống
-                                </p>
-                            </a>
-                        </li>
+                        @if(Auth::user()->role == 'admin')
                         <li class="nav-item has-treeview menu-open">
                             <a href="#" class="nav-link">
                                 <i class="fas fa-sitemap fa-fw"></i>
@@ -92,6 +84,15 @@
                             </a>
                         </li>
                         <li class="nav-item has-treeview menu-open">
+                            <a href="{{ url('/admin/manager/user') }}" class="nav-link">
+                                <i class="fas fa-user fa-fw"></i>
+                                <p>
+                                    Quản lý người dùng
+                                </p>
+                            </a>
+                        </li>
+                        @endif
+                        <li class="nav-item has-treeview menu-open">
                             <a href="#" class="nav-link">
                                 <i class="far fa-newspaper fa-fw"></i>
                                 <p>
@@ -100,16 +101,8 @@
                             </a>
                         </li>
                         <li class="nav-item has-treeview menu-open">
-                            <a href="{{ url('/admin/manager/user') }}" class="nav-link">
-                                <i class="far fa-newspaper fa-fw"></i>
-                                <p>
-                                    Quản lý người dùng
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item has-treeview menu-open">
                             <a href="{{ url('/infor') }}" class="nav-link">
-                                <i class="fas fa-user fa-fw"></i>
+                                <i class="fas fa-cog fa-fw"></i>
                                 <p>
                                     Thông tin tài khoản
                                 </p>

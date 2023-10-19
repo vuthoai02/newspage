@@ -21,11 +21,18 @@ Route::group(['prefix' => '/admin', 'middleware' => 'auth'], function(){
     Route::get('/home', [BackController::class, 'home']);
     Route::group(['prefix' => '/manager'], function(){
         Route::get('/user', [ManagerController::class, 'user']);
+        Route::delete('/user', [ManagerController::class, 'delete_user'])->name('deleteUser');
+        Route::get('/news', [ManagerController::class, 'news']);
+
     });
 });
 
 Route::group(['prefix' => '/user', 'middleware' => 'auth'], function(){
     Route::get('/home', [BackController::class, 'home']);
+    Route::group(['prefix' => '/manager'], function(){
+        Route::get('/news', [ManagerController::class, 'news']);
+
+    });
 });
 
 //chung admin và user được

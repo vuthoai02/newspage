@@ -11,6 +11,7 @@ class UserModel extends Model implements AuthenticatableContract
     use Authenticatable;
 
     protected $table = 'users';
+    public $timestamps = true;
 
     protected $fillable = [
         'email', 'password','username','role'

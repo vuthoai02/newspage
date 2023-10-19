@@ -73,8 +73,7 @@
         }
 
         #formFooter {
-            padding: 25px;
-        }
+            padding: 25px;        }
         .alert{
             margin-top: 10px;
             color: white;
@@ -103,7 +102,9 @@
             </form>
         </div>
         <div id="formFooter">
-            <a class="underlineHover" href="#">Quên mật khẩu?</a>
+            <a href="#">Quên mật khẩu?</a>
+            <span style="color: white;">|</span>
+            <a href="{{url('/register')}}">Chưa có tài khoản?</a>
         </div>
     </div>
 </body>
