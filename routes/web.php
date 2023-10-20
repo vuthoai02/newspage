@@ -10,7 +10,10 @@ Route::post('/login', [UserController::class, 'postLogin'])->name('login');
 Route::get('/register', [UserController::class, 'getRegister']);
 Route::post('/register', [UserController::class, 'postRegister'])->name('register');
 Route::get('/logout', [UserController::class, 'getLogout']);
-
+Route::get('/infor', [UserController::class, 'infor'])->name('infor');
+Route::post('/infor', [UserController::class, 'infor_post'])->name('update_infor');
+Route::get('/change-password', [UserController::class, 'get_newpass']);
+Route::post('/change-password', [UserController::class, 'change_pass'])->name('change_pass');
 
 
 Route::get('/', function () {
@@ -23,6 +26,7 @@ Route::group(['prefix' => '/admin', 'middleware' => 'auth'], function(){
         Route::get('/user', [ManagerController::class, 'user']);
         Route::delete('/user', [ManagerController::class, 'delete_user'])->name('deleteUser');
         Route::get('/news', [ManagerController::class, 'news']);
+        Route::get('/categories', [ManagerController::class, 'categories']);
 
     });
 });
@@ -31,12 +35,5 @@ Route::group(['prefix' => '/user', 'middleware' => 'auth'], function(){
     Route::get('/home', [BackController::class, 'home']);
     Route::group(['prefix' => '/manager'], function(){
         Route::get('/news', [ManagerController::class, 'news']);
-
     });
 });
-
-//chung admin và user được
-Route::get('/infor', [UserController::class, 'infor'])->name('infor');
-Route::post('/infor', [UserController::class, 'infor_post'])->name('update_infor');
-Route::get('/change-password', [UserController::class, 'get_newpass']);
-Route::post('/change-password', [UserController::class, 'change_pass'])->name('change_pass');

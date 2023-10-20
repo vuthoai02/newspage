@@ -26,7 +26,7 @@
         <tr style="border-bottom: 1px solid gray;">
             <th>ID</th>
             <th>Tiêu đề</th>
-            <th>Email</th>
+            <th>Lượt xem</th>
             <th>Thao tác</th>
         </tr>
         <!-- @foreach ($users as $user)

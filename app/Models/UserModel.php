@@ -20,6 +20,10 @@ class UserModel extends Model implements AuthenticatableContract
     protected $hidden = [
         'password','remember_token',
     ];
+
+    public static function getUsers($paginate){
+        return UserModel::where('username', '!=', 'Administrator')->paginate($paginate, ['*'], 'pp');
+    }
 }
 
 ?>

@@ -18,6 +18,13 @@
         color: red !important;
         border: none;
     }
+    .pagination{
+        width: 100%;
+        text-align: center;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+    }
 </style>
 
 @section('content')
@@ -45,5 +52,8 @@
         </tr>
         @endforeach
     </table>
+    <div class="pagination">
+        {{ $users->links('back.pagination.custom') }}
+    </div>
 </div>
 @stop
