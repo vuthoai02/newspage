@@ -36,11 +36,8 @@
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
             <!-- Left navbar links -->
             <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-                </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="{{'/'}}" class="nav-link">Xem website</a>
+                    <a href="{{ url('/')}}" class="nav-link" style="background-color:cornflowerblue; color:white;">Mở trang tin tức</a>
                 </li>
             </ul>
 
@@ -76,18 +73,18 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         @if(Auth::user()->role == 'admin')
                         <li class="nav-item has-treeview menu-open">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-sitemap fa-fw"></i>
-                                <p>
-                                    Quản lý trang
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item has-treeview menu-open">
                             <a href="{{ url('/admin/manager/user') }}" class="nav-link">
                                 <i class="fas fa-user fa-fw"></i>
                                 <p>
                                     Quản lý người dùng
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item has-treeview menu-open">
+                            <a href="{{ url('/admin/manager/categories') }}" class="nav-link">
+                                <i class="fas fa-sitemap fa-fw"></i>
+                                <p>
+                                    Quản lý danh mục
                                 </p>
                             </a>
                         </li>
@@ -151,6 +148,18 @@
                     </div>
                     @yield('content')
                 </div>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        var messageContainer = document.querySelector('.ad_message.alert');
+                        var closeButton = messageContainer.querySelector('.close');
+
+                        if (closeButton) {
+                            closeButton.addEventListener('click', function() {
+                                messageContainer.style.display = 'none';
+                            });
+                        }
+                    });
+                </script>
             </session>
 
 

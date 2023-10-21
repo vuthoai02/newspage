@@ -36,24 +36,28 @@
             <th>Email</th>
             <th>Thao tác</th>
         </tr>
-        @foreach ($users as $user)
-        <tr>
-            <td>{{ $user->id }}</td>
-            <td>{{ $user->username }}</td>
-            <td>{{ $user->email }}</td>
-            <td>
-                <form action="{{ route('deleteUser') }}" method="POST" id="deleteForm">
-                    @csrf
-                    @method('DELETE')
-                    <input type="hidden" name="id" value="{{ $user->id }}">
-                    <button type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa tài khoản này không?')">[Xóa]</button>
-                </form>
-            </td>
-        </tr>
-        @endforeach
+        @if($users)
+            @foreach ($users as $user)
+            <tr>
+                <td>{{ $user->id }}</td>
+                <td>{{ $user->username }}</td>
+                <td>{{ $user->email }}</td>
+                <td>
+                    <form action="{{ route('deleteUser') }}" method="POST" id="deleteForm">
+                        @csrf
+                        @method('DELETE')
+                        <input type="hidden" name="id" value="{{ $user->id }}">
+                        <button type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa tài khoản này không?')">[Xóa]</button>
+                    </form>
+                </td>
+            </tr>
+            @endforeach
+        @endif
     </table>
+    @if($users)
     <div class="pagination">
         {{ $users->links('back.pagination.custom') }}
     </div>
+    @endif
 </div>
 @stop

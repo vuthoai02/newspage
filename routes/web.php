@@ -27,7 +27,11 @@ Route::group(['prefix' => '/admin', 'middleware' => 'auth'], function(){
         Route::delete('/user', [ManagerController::class, 'delete_user'])->name('deleteUser');
         Route::get('/news', [ManagerController::class, 'news']);
         Route::get('/categories', [ManagerController::class, 'categories']);
-
+        Route::get('/add-categories', [ManagerController::class, 'add_categories']);
+        Route::post('/add-categories', [ManagerController::class, 'post_categories'])->name('post_categories');
+        Route::get('/update-category/{id}', [ManagerController::class, 'get_update_cat']);
+        Route::post('/update-category', [ManagerController::class, 'update_cat'])->name('update_cat');
+        Route::delete('/categories', [ManagerController::class, 'delete_category'])->name('deletecategory');
     });
 });
 
