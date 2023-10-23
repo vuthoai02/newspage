@@ -11,9 +11,9 @@
             <div class="card-body">
                 @csrf
                 <div class=" form-group">
-                <label for="exampleInputEmail1">Tên danh mục<span class="color_red">*</span></label>
-                <input type="text" class="form-control" name="name">
-
+                    <label for="exampleInputEmail1">Tên danh mục<span class="color_red">*</span></label>
+                    <input type="text" class="form-control" name="name">
+                </div>
                 <div class="form-group">
                     <label for="exampleInputEmail1">Danh mục cha<span class="color_red">*</span></label>
                     <select name="parentId" class="form-control">

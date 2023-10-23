@@ -12,7 +12,7 @@ class CategoryModel extends Model
 
     public static function getCategories($paginate)
     {
-        $categories = CategoryModel::paginate($paginate);
+        $categories = CategoryModel::paginate($paginate, ['*'], 'pp');
 
         if ($categories->isEmpty()) {
             return null;

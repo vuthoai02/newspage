@@ -90,7 +90,7 @@
                         </li>
                         @endif
                         <li class="nav-item has-treeview menu-open">
-                            <a href="#" class="nav-link">
+                            <a href="{{ auth()->user()->role === 'admin' ? url('/admin/manager/news') : url('/user/manager/news/'.Auth::user()->id) }}" class="nav-link">
                                 <i class="far fa-newspaper fa-fw"></i>
                                 <p>
                                     Quản lý tin tức
@@ -151,12 +151,14 @@
                 <script>
                     document.addEventListener('DOMContentLoaded', function() {
                         var messageContainer = document.querySelector('.ad_message.alert');
-                        var closeButton = messageContainer.querySelector('.close');
+                        if (messageContainer) {
+                            var closeButton = messageContainer.querySelector('.close');
 
-                        if (closeButton) {
-                            closeButton.addEventListener('click', function() {
-                                messageContainer.style.display = 'none';
-                            });
+                            if (closeButton) {
+                                closeButton.addEventListener('click', function() {
+                                    messageContainer.style.display = 'none';
+                                });
+                            }
                         }
                     });
                 </script>
@@ -178,8 +180,6 @@
         <!-- /.control-sidebar -->
     </div>
     <!-- ./wrapper -->
-
-
 </body>
 
 </html>

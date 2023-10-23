@@ -13,9 +13,9 @@
                 <input type="hidden" name="id" value="{{Auth::user()->id}}">
                 <input type="hidden" name="role" value="{{Auth::user()->role}}">
                 <div class=" form-group">
-                <label for="exampleInputEmail1">Tên tài khoản<span class="color_red">*</span></label>
-                <input type="text" class="form-control" name="fullname" value="{{Auth::user()->username}}" disabled>
-
+                    <label for="exampleInputEmail1">Tên tài khoản<span class="color_red">*</span></label>
+                    <input type="text" class="form-control" name="fullname" value="{{Auth::user()->username}}" disabled>
+                </div>
                 <div class="form-group">
                     <label for="exampleInputEmail1">Email <span class="color_red">*</span></label>
                     <input type="email" class="form-control" name="email" value="{{Auth::user()->email}}">

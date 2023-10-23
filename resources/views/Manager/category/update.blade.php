@@ -14,29 +14,29 @@
                 <div class=" form-group">
                     <label for="exampleInputEmail1">Danh mục<span class="color_red">*</span></label>
                     <input type="text" class="form-control" name="name" value="{{ $category->name}}">
-
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Danh mục cha <span class="color_red">*</span></label>
-                        <select name="parentId" class="form-control">
-                            <option value="{{ $category->parentId }}">
-                                {{ $category->parentId ? \App\Models\CategoryModel::find($category->parentId)->name : 'Danh mục cha không xác định' }}
-                            </option>
-                            @foreach(\App\Models\CategoryModel::where('id', '!=', $category->parentId)->get() as $cat)
-                            <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
                 </div>
-
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Danh mục cha <span class="color_red">*</span></label>
+                    <select name="parentId" class="form-control">
+                        <option value="{{ $category->parentId }}">
+                            {{ $category->parentId ? \App\Models\CategoryModel::find($category->parentId)->name : 'Danh mục cha không xác định' }}
+                        </option>
+                        @foreach(\App\Models\CategoryModel::where('id', '!=', $category->parentId)->get() as $cat)
+                        <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
-            <!-- /.card-body -->
 
-            <div class="card-footer">
-                <button type="submit" class="btn btn-primary">Chỉnh sửa</button>
-            </div>
-        </form>
     </div>
-    <!-- /.card -->
+    <!-- /.card-body -->
+
+    <div class="card-footer">
+        <button type="submit" class="btn btn-primary">Chỉnh sửa</button>
+    </div>
+    </form>
+</div>
+<!-- /.card -->
 
 
 

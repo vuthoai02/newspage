@@ -3,9 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Models\CategoryModel;
+use App\Models\NewsModel;
 use App\Models\UserModel;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
+
+function RemoveAccents($str)
+{
+    $accentedChars = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñ';
+    $unaccentedChars = 'AAAAAAaaaaaaOOOOOOooooooEEEEeeeeCcIIIIiiiiUUUUuuuuyNn';
+    $str = strtr($str, $accentedChars, $unaccentedChars);
+    return $str;
+}
+function ChangeToSlug($title)
+{
+    $slug = strtolower($title);
+    $slug = RemoveAccents($slug);
+    $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
+    $slug = trim($slug, '-');
+    return $slug;
+}
 class ManagerController extends Controller
 {
     public function __construct()
@@ -22,61 +41,147 @@ class ManagerController extends Controller
     public function categories()
     {
         $categories = CategoryModel::getCategories(10);
-        return view('Manager.category.categories',['categories' => $categories]);
+        return view('Manager.category.categories', ['categories' => $categories]);
     }
 
     public function add_categories()
     {
         $categories = CategoryModel::getAllCategories();
-        return view('Manager.category.insert', ['categories'=>$categories]);
+        return view('Manager.category.insert', ['categories' => $categories]);
+    }
+
+    public function add_news()
+    {
+        $categories = CategoryModel::getAllCategories();
+        return view('Manager.news.insert', ['categories' => $categories]);
+    }
+
+    public function upload_images(Request $request): JsonResponse
+    {
+        if ($request->hasFile('upload')) {
+            $originName = $request->file('upload')->getClientOriginalName();
+            $fileName = pathinfo($originName, PATHINFO_FILENAME);
+            $extension = $request->file('upload')->getClientOriginalExtension();
+            $fileName = $fileName . '_' . time() . '.' . $extension;
+
+            $request->file('upload')->move(public_path('media'), $fileName);
+
+            $url = asset('media/' . $fileName);
+
+            return response()->json(['fileName' => $fileName, 'uploaded' => 1, 'url' => $url]);
+        } else {
+            echo "không có file !";
+        }
+    }
+
+    public function post_news(Request $request)
+    {
+        if (!isset($request->title) && !isset($request->idCat) && !isset($request->content)) {
+            return redirect()->back()->with(['flash_level' => 'danger', 'flash_message' => 'Vui lòng điền đầy đủ!']);
+        }
+
+        //POST
+        $news = new NewsModel();
+        $news->title = $request->title;
+        $news->idUser = $request->idUser;
+        $news->alias = ChangeToSlug($request->title);
+        $news->idCat = $request->idCat;
+        $news->content = $request->content;
+        $news->view = 0;
+        $flag = $news->save();
+        if ($flag) {
+            return redirect()->back()->with(['flash_level' => 'success', 'flash_message' => 'Đăng thành công!']);
+        } else {
+            return redirect()->back()->with(['flash_level' => 'danger', 'flash_message' => 'Đăng bài thất bại!']);
+        }
     }
 
     public function post_categories(Request $request)
     {
         $existCat = CategoryModel::where('name', $request->name)->exists();
-        if($existCat){
-            return redirect('/admin/manager/categories')->with(['flash_level' => 'danger', 'flash_message' => 'Danh mục đã tồn tại!']);
+        if ($existCat) {
+            return redirect()->back()->with(['flash_level' => 'danger', 'flash_message' => 'Danh mục đã tồn tại!']);
         }
         $category = new CategoryModel();
-        $category->name= $request->name;
-        $category->parentId= $request->parentId;
+        $category->name = $request->name;
+        $category->parentId = $request->parentId;
         $flag = $category->save();
         if ($flag) {
-            return redirect('/admin/manager/categories')->with(['flash_level' => 'success', 'flash_message' => 'Thêm thành công!']);
+            return redirect()->back()->with(['flash_level' => 'success', 'flash_message' => 'Thêm thành công!']);
         } else {
-            return redirect('/admin/manager/categories')->with(['flash_level' => 'danger', 'flash_message' => 'Thêm danh mục không thành công!']);
+            return redirect()->back()->with(['flash_level' => 'danger', 'flash_message' => 'Thêm danh mục không thành công!']);
         }
     }
 
-    public function news()
+    public function get_user_news($id)
     {
-        $users = UserModel::where('username', '!=', 'Administrator')->get();
-        return view('Manager.user.user', ['users' => $users]);
+        $news = NewsModel::get_user_news($id, 10);
+        return view('Manager.news.news', ['news' => $news]);
     }
 
-    public function get_update_cat(Request $request)
+    public function get_admin_news()
     {
-        $category = CategoryModel::find($request->id);
+        $news = NewsModel::get_news(10);
+        return view('Manager.news.news',['news'=>$news]);
+    }
+
+    public function get_update_cat($id)
+    {
+        $category = CategoryModel::find($id);
         if ($category) {
             return view('Manager.category.update', ['category' => $category]);
         } else {
-            return redirect('/admin/manager/categories')->with(['flash_level' => 'danger', 'flash_message' => 'Không tìm thấy danh mục!']);
+            return redirect()->back()->with(['flash_level' => 'danger', 'flash_message' => 'Không tìm thấy danh mục!']);
+        }
+    }
+
+    public function get_update_news($id)
+    {
+        $news = NewsModel::find($id);
+        if ($news) {
+            return view('Manager.news.update', ['news' => $news]);
+        } else {
+            return redirect()->back()->with(['flash_level' => 'danger', 'flash_message' => 'Không tìm thấy bài viết!']);
+        }
+    }
+
+    public function update_news(Request $request)
+    {
+        if (!isset($request->title) || !isset($request->idCat) || !isset($request->content)) {
+            return redirect()->back()->with(['flash_level' => 'danger', 'flash_message' => 'Vui lòng điền thông tin thay đổi!']);
+        }
+        $updatenew = NewsModel::find($request->id);
+        if ($updatenew) {
+            $updatenew->title = $request->title;
+            $updatenew->idUser = $request->idUser;
+            $updatenew->alias = $request->alias;
+            $updatenew->idCat = $request->idCat;
+            $updatenew->content = $request->content;
+            $updatenew->view = $request->view;
+            $flag = $updatenew->save();
+            if ($flag) {
+                return redirect()->back()->with(['flash_level' => 'success', 'flash_message' => 'Cập nhật thành công']);
+            } else {
+                return redirect()->back()->with(['flash_level' => 'danger', 'flash_message' => 'Cập nhật thất bại!']);
+            }
+        } else{
+            return redirect()->back()->with(['flash_level' => 'danger', 'flash_message' => 'Không tìm thấy bài đăng để cập nhật!']);
         }
     }
 
     public function update_cat(Request $request)
     {
-        if(!isset($request->name) && !isset($request->parentId)){
-            return redirect('/admin/manager/categories')->with(['flash_level' => 'danger', 'flash_message' => 'Vui lòng điền thông tin thay đổi!']);
+        if (!isset($request->name) || !isset($request->parentId)) {
+            return redirect()->back()->with(['flash_level' => 'danger', 'flash_message' => 'Vui lòng điền thông tin thay đổi!']);
         }
         $category = CategoryModel::find($request->id);
         $category->name = $request->name;
         $category->parentId = $request->parentId;
         $flag = $category->save();
-        if($flag){ 
-            return redirect('/admin/manager/update-category/'.$category->id)->with(['flash_level' => 'success', 'flash_message' => 'Cập nhật thành công']);
-        } else { 
-            return redirect('/admin/manager/update-category/'.$category->id)->with(['flash_level' => 'danger', 'flash_message' => 'Cập nhật thất bại!']); 
+        if ($flag) {
+            return redirect()->back()->with(['flash_level' => 'success', 'flash_message' => 'Cập nhật thành công']);
+        } else {
+            return redirect()->back()->with(['flash_level' => 'danger', 'flash_message' => 'Cập nhật thất bại!']);
         }
     }
 
@@ -86,14 +191,14 @@ class ManagerController extends Controller
         if ($user) {
             $result = $user->delete();
             if ($result) {
-                return redirect('/admin/manager/user')->with(['flash_level' => 'success', 'flash_message' => 'Xóa thành công!']);
+                return redirect()->back()->with(['flash_level' => 'success', 'flash_message' => 'Xóa thành công!']);
             } else {
-                return redirect('/admin/manager/user')->with(['flash_level' => 'danger', 'flash_message' => 'Xóa thất bại!']);
+                return redirect()->back()->with(['flash_level' => 'danger', 'flash_message' => 'Xóa thất bại!']);
             }
             // Thông báo xóa thành công hoặc thực hiện các tác vụ khác sau khi xóa
         } else {
             // Xử lý khi không tìm thấy người dùng
-            return redirect('/admin/manager/user')->with(['flash_level' => 'danger', 'flash_message' => 'Không tìm thấy người dùng!']);
+            return redirect()->back()->with(['flash_level' => 'danger', 'flash_message' => 'Không tìm thấy người dùng!']);
         }
     }
 
@@ -103,14 +208,31 @@ class ManagerController extends Controller
         if ($category) {
             $result = $category->delete();
             if ($result) {
-                return redirect('/admin/manager/categories')->with(['flash_level' => 'success', 'flash_message' => 'Xóa thành công!']);
+                return redirect()->back()->with(['flash_level' => 'success', 'flash_message' => 'Xóa thành công!']);
             } else {
-                return redirect('/admin/manager/categories')->with(['flash_level' => 'danger', 'flash_message' => 'Xóa thất bại!']);
+                return redirect()->back()->with(['flash_level' => 'danger', 'flash_message' => 'Xóa thất bại!']);
             }
             // Thông báo xóa thành công hoặc thực hiện các tác vụ khác sau khi xóa
         } else {
             // Xử lý khi không tìm thấy người dùng
-            return redirect('/admin/manager/categories')->with(['flash_level' => 'danger', 'flash_message' => 'Không tìm thấy người dùng!']);
+            return redirect()->back()->with(['flash_level' => 'danger', 'flash_message' => 'Không tìm thấy người dùng!']);
+        }
+    }
+
+    public function delete_news(Request $request)
+    {
+        $news = NewsModel::find($request->id);
+        if ($news) {
+            $result = $news->delete();
+            if ($result) {
+                return redirect()->back()->with(['flash_level' => 'success', 'flash_message' => 'Xóa thành công!']);
+            } else {
+                return redirect()->back()->with(['flash_level' => 'danger', 'flash_message' => 'Xóa thất bại!']);
+            }
+            // Thông báo xóa thành công hoặc thực hiện các tác vụ khác sau khi xóa
+        } else {
+            // Xử lý khi không tìm thấy người dùng
+            return redirect()->back()->with(['flash_level' => 'danger', 'flash_message' => 'Không tìm thấy bài viết!']);
         }
     }
 }
