@@ -25,6 +25,10 @@
                     </select>
                 </div>
                 <div class=" form-group">
+                    <label for="exampleInputEmail1">Mô tả<span class="color_red">*</span></label>
+                    <textarea name="description" class="form-control"></textarea>
+                </div>
+                <div class=" form-group">
                     <label for="exampleInputEmail1">Nội dung<span class="color_red">*</span></label>
                     <textarea name="content" class="form-control" id="ckeditor"></textarea>
                 </div>

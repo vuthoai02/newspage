@@ -26,13 +26,26 @@
         margin-bottom: 10px;
         color: #fff;
     }
+
+    #top{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 </style>
 
 @section('content')
 <div class="col-md-12">
     @if(Auth::user()->role == 'user')
-    <div>
+    <div id="top">
         <a href="{{ url('/user/manager/add-news')}}" class="add">+ Thêm tin tức</a>
+        <form role="form" action="{{ route('search_news')}}" method="post">
+            @csrf
+            <input type="text" name="search" placeholder="Tìm kiếm bài viết" />
+            <button type="submit" id="search-button">
+                <i class="fa fa-search"></i>
+            </button>
+        </form>
     </div>
     @endif
     <table>
@@ -51,28 +64,12 @@
         <tr>
             @if(Auth::user()->role == 'admin')
             <td>{{ $ne->id }}</td>
-            <td>
-                @php
-                $user = \App\Models\UserModel::find($ne->idUser);
-                if ($user) {
-                echo $user->username;
-                }
-                @endphp
-            </td>
+            <td>{{ $ne->username }}</td>
             @endif
             <td>
                 <a>{{ $ne->title }}</a>
             </td>
-            <td>
-                @if ($ne->idCat)
-                <?php
-                $category = \App\Models\CategoryModel::find($ne->idCat);
-                ?>
-                {{ $category->name }}
-                @else
-                Không có
-                @endif
-            </td>
+            <td>{{ $ne->nameCat }}</td>
             <td>{{ $ne->view }}</td>
             <td style="display: flex; color:blue">
                 @if(Auth::user()->role == 'user')
@@ -87,6 +84,8 @@
             </td>
         </tr>
         @endforeach
+        @else
+        <td>Không tìm thấy nội dung!</td>
         @endif
     </table>
     @if($news)

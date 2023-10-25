@@ -18,7 +18,9 @@ return new class extends Migration
             $table->string('title');
             $table->integer('idUser');
             $table->text('content');
+            $table->text('description');
             $table->string('alias');
+            $table->string('imgUrl');
             $table->integer('view');
             $table->integer('idCat');
             $table->timestamps();

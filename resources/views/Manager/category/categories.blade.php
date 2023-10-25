@@ -45,7 +45,6 @@
         <tr style="border-bottom: 1px solid gray;">
             <th>ID</th>
             <th>Danh mục</th>
-            <th>Danh mục cha</th>
             <th>Thao tác</th>
         </tr>
         @if(!empty($categories))
@@ -53,16 +52,6 @@
         <tr>
             <td>{{ $category->id }}</td>
             <td>{{ $category->name }}</td>
-            <td>
-                @if ($category->parentId)
-                <?php
-                $parentCategory = \App\Models\CategoryModel::find($category->parentId);
-                ?>
-                {{ $parentCategory->name }}
-                @else
-                Không có
-                @endif
-            </td>
             <td style="display: flex; color:blue">
                 <a href="{{ url('/admin/manager/update-category/'.$category->id)}}">[Chỉnh sửa]</a>
                 <form action="{{ route('deletecategory') }}" method="POST" id="deleteForm">
@@ -74,6 +63,8 @@
             </td>
         </tr>
         @endforeach
+        @else
+        <td>Không tìm thấy nội dung!</td>
         @endif
     </table>
     @if(!empty($categories))

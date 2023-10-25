@@ -68,4 +68,4 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 ## Lệnh chạy khi mới pull về
 composer install
 php artisan key:generate
-php artisan db:seed --class=UserSeeder
+php artisan db:seed --class=UserTableSeeder

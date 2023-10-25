@@ -11,11 +11,12 @@
             margin: 0;
             padding: 0;
         }
-        a{
+
+        a {
             text-decoration: none;
         }
 
-        h1{
+        #logo {
             color: #fff;
         }
 
@@ -32,23 +33,19 @@
             display: flex;
             justify-content: center;
             margin-top: 3%;
-            position: relative;
         }
 
         #search input {
             width: 35vw;
             padding: 10px;
-            border-radius: 15px;
+            border-radius: 15px 0 0 15px;
             border: 1px solid #0384fc;
             outline: none;
         }
 
         #search-button {
-            position: absolute;
-            left: 64.5vw;
-            top: 1px;
             background-color: #0384fc;
-            padding: 12px 15px;
+            padding: 11px;
             border: none;
             border-radius: 0 15px 15px 0;
             outline: none;
@@ -57,6 +54,36 @@
 
         .fa-search {
             color: #fff;
+        }
+
+        .container-fluid {
+            display: flex;
+            margin-top: 20px;
+            min-height: calc(100vh - 60px);
+        }
+
+        .footer {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            height: 100px;
+            margin-top: 50px;
+        }
+
+        .footer-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .footer-row p {
+            flex: 0 0 50%;
+            margin: 5px 0;
+        }
+
+        .footer .contact-info {
+            font-size: 14px;
         }
     </style>
 </head>
@@ -67,14 +94,16 @@
             <div>
                 <div class="nav">
                     <div>
-                        <a href="/"><h1>News</h1></a>
+                        <a href="{{url('/')}}">
+                            <h1 id="logo">News</h1>
+                        </a>
                     </div>
                     <div>
-                        <a>Bạn muốn sáng tạo nội dung?</a>
+                        <a href="{{ url('/login') }}" style="color: #fff;">Bạn muốn sáng tạo nội dung?</a>
                     </div>
                 </div>
                 <div id="search">
-                    <form>
+                    <form role="form" action="{{route('search')}}" method="post">
                         @csrf
                         <input type="text" name="search" placeholder="Tìm kiếm bài viết" />
                         <button type="submit" id="search-button">
@@ -89,9 +118,17 @@
                 </div>
             </session>
         </div>
-        <footer class="main-footer">
-        </footer>
     </div>
 </body>
+<footer class="footer">
+    <div class="footer-row">
+        <p>Tên trang web</p>
+        <p class="contact-info">Địa chỉ: 123 Đường ABC, Thành phố XYZ</p>
+        <p class="contact-info">Số điện thoại: 123-456-789</p>
+        <p class="contact-info">Email: info@example.com</p>
+    </div>
+    <p>© 2023 Trang web của tôi. Tất cả các quyền được bảo lưu.</p>
+    </div>
+</footer>
 
 </html>

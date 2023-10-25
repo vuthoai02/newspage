@@ -67,6 +67,7 @@ class ManagerController extends Controller
             $request->file('upload')->move(public_path('media'), $fileName);
 
             $url = asset('media/' . $fileName);
+            $request->session()->put('uploadedImageUrl', 'media/'.$fileName);
 
             return response()->json(['fileName' => $fileName, 'uploaded' => 1, 'url' => $url]);
         } else {
@@ -79,13 +80,15 @@ class ManagerController extends Controller
         if (!isset($request->title) && !isset($request->idCat) && !isset($request->content)) {
             return redirect()->back()->with(['flash_level' => 'danger', 'flash_message' => 'Vui lòng điền đầy đủ!']);
         }
-
+        $imageUrl = $request->session()->get('uploadedImageUrl');
         //POST
         $news = new NewsModel();
         $news->title = $request->title;
         $news->idUser = $request->idUser;
+        $news->description = $request->description;
         $news->alias = ChangeToSlug($request->title);
         $news->idCat = $request->idCat;
+        $news->imgUrl = $imageUrl;
         $news->content = $request->content;
         $news->view = 0;
         $flag = $news->save();
@@ -104,7 +107,7 @@ class ManagerController extends Controller
         }
         $category = new CategoryModel();
         $category->name = $request->name;
-        $category->parentId = $request->parentId;
+        $category->alias = ChangeToSlug($request->name);
         $flag = $category->save();
         if ($flag) {
             return redirect()->back()->with(['flash_level' => 'success', 'flash_message' => 'Thêm thành công!']);
@@ -122,7 +125,7 @@ class ManagerController extends Controller
     public function get_admin_news()
     {
         $news = NewsModel::get_news(10);
-        return view('Manager.news.news',['news'=>$news]);
+        return view('Manager.news.news', ['news' => $news]);
     }
 
     public function get_update_cat($id)
@@ -154,6 +157,7 @@ class ManagerController extends Controller
         if ($updatenew) {
             $updatenew->title = $request->title;
             $updatenew->idUser = $request->idUser;
+            $updatenew->description = $request->description;
             $updatenew->alias = $request->alias;
             $updatenew->idCat = $request->idCat;
             $updatenew->content = $request->content;
@@ -164,7 +168,7 @@ class ManagerController extends Controller
             } else {
                 return redirect()->back()->with(['flash_level' => 'danger', 'flash_message' => 'Cập nhật thất bại!']);
             }
-        } else{
+        } else {
             return redirect()->back()->with(['flash_level' => 'danger', 'flash_message' => 'Không tìm thấy bài đăng để cập nhật!']);
         }
     }
@@ -176,7 +180,7 @@ class ManagerController extends Controller
         }
         $category = CategoryModel::find($request->id);
         $category->name = $request->name;
-        $category->parentId = $request->parentId;
+        $category->alias = $request->alias;
         $flag = $category->save();
         if ($flag) {
             return redirect()->back()->with(['flash_level' => 'success', 'flash_message' => 'Cập nhật thành công']);
@@ -189,6 +193,10 @@ class ManagerController extends Controller
     {
         $user = UserModel::find($request->id);
         if ($user) {
+            $newsOfUser = NewsModel::where('idUser', $request->id)->get();
+            foreach ($newsOfUser as $post) {
+                $post->delete();
+            }
             $result = $user->delete();
             if ($result) {
                 return redirect()->back()->with(['flash_level' => 'success', 'flash_message' => 'Xóa thành công!']);
@@ -223,8 +231,14 @@ class ManagerController extends Controller
     {
         $news = NewsModel::find($request->id);
         if ($news) {
+            $imageUrl = $news->imgUrl;
             $result = $news->delete();
             if ($result) {
+                $imagePath = public_path($imageUrl);
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
+                }
+
                 return redirect()->back()->with(['flash_level' => 'success', 'flash_message' => 'Xóa thành công!']);
             } else {
                 return redirect()->back()->with(['flash_level' => 'danger', 'flash_message' => 'Xóa thất bại!']);
@@ -232,6 +246,16 @@ class ManagerController extends Controller
             // Thông báo xóa thành công hoặc thực hiện các tác vụ khác sau khi xóa
         } else {
             // Xử lý khi không tìm thấy người dùng
+            return redirect()->back()->with(['flash_level' => 'danger', 'flash_message' => 'Không tìm thấy bài viết!']);
+        }
+    }
+
+    public function search_news(Request $request)
+    {
+        $news = NewsModel::get_news_title($request->search, 10);
+        if ($news) {
+            return view('Manager.news.news', ['news' => $news]);
+        } else {
             return redirect()->back()->with(['flash_level' => 'danger', 'flash_message' => 'Không tìm thấy bài viết!']);
         }
     }

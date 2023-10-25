@@ -7,7 +7,7 @@ use App\Http\Controllers\FrontController;
 use App\Http\Controllers\ManagerController;
 
 Route::get('/', [FrontController::class,'home']);
-
+Route::post('/search', [FrontController::class, 'search'])->name('search');
 Route::get('/login', [UserController::class, 'getLogin']);
 Route::post('/login', [UserController::class, 'postLogin'])->name('login');
 Route::get('/register', [UserController::class, 'getRegister']);
@@ -17,6 +17,8 @@ Route::get('/infor', [UserController::class, 'infor'])->name('infor');
 Route::post('/infor', [UserController::class, 'infor_post'])->name('update_infor');
 Route::get('/change-password', [UserController::class, 'get_newpass']);
 Route::post('/change-password', [UserController::class, 'change_pass'])->name('change_pass');
+Route::get('/category/{alias}', [FrontController::class,'get_news_category']);
+Route::get('/post/{alias}', [FrontController::class,'detail']);
 
 
 Route::group(['prefix' => '/admin', 'middleware' => 'auth'], function(){
@@ -32,6 +34,7 @@ Route::group(['prefix' => '/admin', 'middleware' => 'auth'], function(){
         Route::get('/update-category/{id}', [ManagerController::class, 'get_update_cat']);
         Route::post('/update-category', [ManagerController::class, 'update_cat'])->name('update_cat');
         Route::delete('/categories', [ManagerController::class, 'delete_category'])->name('deletecategory');
+        Route::post('/search', [ManagerController::class, 'search_news'])->name('search_news');
     });
 });
 
@@ -45,5 +48,6 @@ Route::group(['prefix' => '/user', 'middleware' => 'auth'], function(){
         Route::post('/update-news', [ManagerController::class, 'update_news'])->name('update_news');
         Route::delete('/news', [ManagerController::class, 'delete_news'])->name('delete_news');
         Route::post('ckeditor/upload', [ManagerController::class, 'upload_images'])->name('upload_images');
+        Route::post('/search', [ManagerController::class, 'search_news'])->name('search_news');
     });
 });
